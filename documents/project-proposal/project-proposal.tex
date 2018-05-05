@@ -1,0 +1,47 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+	\pagestyle{empty}
+	\noindent
+	\begin{minipage}{\textwidth}
+	\section*{DD2424 Project Proposal\vspace{2mm}\\{\huge Neural Architecture Transfer}}
+	\subsection*{Project members}
+	\begin{tabular}{ll}
+		Anna Buyevich& \href{mailto:buyevich@kth.se}{buyevich@kth.se}\\
+		Henrik Karlsson& \href{mailto:henrik10@kth.se}{henrik10@kth.se}\\
+		Ergün Batuhan Kaynak& \href{mailto:kaynak@kth.se}{kaynak@kth.se}
+	\end{tabular}
+	\end{minipage}
+	
+		\subsection*{Project description}
+		We will construct a neural style transfer algorithm for transferring the architecture of one building to another. We will generate the image $G$ by using a content image $C$ and a style/architecture $S$ image. The content image contains the building that should have the architecture transformed and the style image should have the target architecture. The loss function for the NN should be the following:
+		\[
+			C(G,C,S) = \alpha C_{content}(G,C) + \beta C_{style}(G,S)
+		\]
+		where $C_{content}(G,C)$ is the difference in some activation and $C_{style}(G,S)$ is the difference in the correlations of some activation. 
+		
+		We will use Darknet (probably Darknet-19) as a neural network and the Sheffield building dataset. We might also include our own images for fun. We will use Darknet since it is a fast, efficient and small, this is important because we will have to tune the $\alpha$ and $\beta$ variables, and we plan to use a GTX 1060 6GB GPU for generating the images.
+		
+		We plan to use Python3, together with Keras or PyTorch to generate the images.
+		
+		We will start by generating images of size $\sim$256x256, and if it is viable, we will scale up to larger images. We believe this can be done since Darknet is made for YOLO algorithms (one pass, object localization), different image sizes should therefore not matter.
+		
+		The project will be regarded a success if we manage to transfer some architectures to buildings.
+		
+		\subsection*{References \& Resources}
+			Sheffield Building Image Dataset \\ \url{https://www.sheffield.ac.uk/eee/research/iel/research#} 
+			\vspace{2mm}
+			
+			\noindent
+			YOLOv3 and Darknet-19\\
+			\url{https://pjreddie.com/media/files/papers/YOLOv3.pdf}
+			\vspace{2mm}
+			
+			\noindent
+			Image Style Transfer Using Convolutional Neural Networks\\
+			\url{http://openaccess.thecvf.com/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf}
+\end{document}
