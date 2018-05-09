@@ -345,3 +345,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# pickle
+*.pkl
