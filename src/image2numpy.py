@@ -1,37 +1,38 @@
-import numpy as np
+import imageio
 import cv2
-import pickle
+import numpy as np
 
-
-def open_image(filepath):
-    bgr_img = cv2.imread(filepath)
-    b, g, r = cv2.split(bgr_img)       # get b,g,r
-    return cv2.merge([r, g, b])
-
-
-def get_images(start, end):
-    images = list()
-    for i in range(start, end):
-        im = open_image("../resize256_20/%d.png" % (i + 1))
-        images.append(im)
-    return images
-
-
-def save(filepath, obj):
-    with open(filepath, 'wb') as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
-
-
-def load(filepath):
+def get_image(filepath):
     with open(filepath, 'rb') as f:
-        return pickle.load(f)
+        img = imageio.imread(f)
+    return img
 
 
-label2images = dict()
-for i in range(0, 10):
-    start = i * 20
-    end = start + 20
-    images = get_images(start, end)
-    label2images[i] = images
+def crop_resize(img):
+    height, width = img.shape[:2]
 
-save('obj/label2images.pkl', label2images)
+    if height > width:
+        center = height // 2
+        up = center - width // 2
+        down = center + width // 2
+        img = img[up:down, :, :]
+    elif height < width:
+        center = width // 2
+        left = center - height // 2
+        right = center + height // 2
+        img = img[:, left:right, :]
+    img = cv2.resize(img, (256, 256))
+    return img
+
+
+def get_images(filepaths):
+    imgs = map(get_image, filepaths)
+    imgs = map(crop_resize, imgs)
+    imgs = map(lambda x: x / 255, imgs)
+    imgs_arr = np.array(list(imgs), dtype=np.float32)
+    return imgs_arr
+
+
+filepaths = ['../resize256_20/%d.png' % (i+1) for i in range(200)]
+imgs_arr = get_images(filepaths)
+np.save('obj/imgs.npy', imgs_arr)
