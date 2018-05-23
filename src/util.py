@@ -1,5 +1,8 @@
 import keras.backend as K
 import tensorflow as tf
+import cv2
+import imageio
+import numpy as np
 
 def square_sum(x):
     return K.sum(K.square(x), axis=-1, keepdims=True)
@@ -32,3 +35,26 @@ def gram(x):
     m, n = map(int, x.shape[2:])
     G = gram_matrix(x)
     return G / (4 * m**2 * n**2)
+
+def get_image(filepath):
+    with open(filepath, 'rb') as f:
+        img = imageio.imread(f)
+    img = crop_resize(img)
+    return np.clip(img / 255, 0, 1)
+
+
+def crop_resize(img):
+    height, width = img.shape[:2]
+
+    if height > width:
+        center = height // 2
+        up = center - width // 2
+        down = center + width // 2
+        img = img[up:down, :, :]
+    elif height < width:
+        center = width // 2
+        left = center - height // 2
+        right = center + height // 2
+        img = img[:, left:right, :]
+    img = cv2.resize(img, (256, 256), cv2.INTER_LANCZOS4)
+    return img
